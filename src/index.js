@@ -28,6 +28,9 @@ export class Dateo {
 		this.month = this.$d.getUTCMonth()
 		this.date = this.$d.getUTCDate()
 		this.day = this.$d.getUTCDay()
+
+		// make immutable
+		Object.freeze(this)
 	}
 
 	clone() {
@@ -164,4 +167,3 @@ const dateo = (date) => {
 }
 
 export default dateo
-// export Dateo
