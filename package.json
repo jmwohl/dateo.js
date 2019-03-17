@@ -1,10 +1,11 @@
 {
   "name": "dateo.js",
   "version": "0.1.0",
-  "description": "A date library that only cares about dates.",
+  "description": "A date library that only cares about dates. Not times. Not timezones. Just Dates.",
   "main": "dist/dateo.min.js",
   "scripts": {
     "test-html": "nyc --reporter=html mocha",
+    "lint": "eslint ./src ./test",
     "test": "nyc mocha --require @babel/register",
     "test-coveralls": "nyc --reporter=text-lcov mocha --require @babel/register | coveralls",
     "build": "webpack --mode production",
@@ -16,7 +17,10 @@
       "limit": "2 KB"
     }
   ],
-  "author": "= <jon@jonwohl.com>",
+  "files": [
+    "dist"
+  ],
+  "author": "Jonathan Wohl <jonw@lighterculture.com>",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.3.4",
@@ -24,6 +28,12 @@
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.5",
     "coveralls": "^3.0.3",
+    "eslint": "^5.15.2",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
     "size-limit": "^0.21.1",

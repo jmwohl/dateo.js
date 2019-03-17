@@ -11,10 +11,10 @@ const padStart = (string, length, pad) => {
 
 export class Dateo {
 	// constructor expects ISO date string in format YYYY-MM-DD
-	constructor(dateString) {
+	constructor (dateString) {
 		if (dateString) {
 			if (!REGEX_PARSE.test(dateString)) {
-				throw 'Invalid date string passed, expected format YYYY-MM-DD'
+				throw new Error('Invalid date string passed, expected format YYYY-MM-DD')
 			}
 			this.$d = new Date(dateString)
 		} else {
@@ -33,131 +33,131 @@ export class Dateo {
 		Object.freeze(this)
 	}
 
-	clone() {
+	clone () {
 		return new Dateo(this.toString())
 	}
 
 	// unit can be 'd', 'w', 'm', 'y'
-	add(quantity, unit) {
+	add (quantity, unit) {
 		const newOD = this.clone()
 		switch (unit) {
-			case 'd':
-				newOD.$d.setUTCDate(this.date + quantity)
-				break
-			case 'w':
-				newOD.$d.setUTCDate(this.date + quantity*7)
-				break
-			case 'm':
-				// the following ensures add/subtracting months of differing lengths
-				// works as expected.
-				newOD.$d.setUTCDate(1)
-				newOD.$d.setUTCMonth(this.month + quantity)
-				newOD.$d.setUTCDate(Math.min(this.date, newOD.daysInMonth()))
-				break
-			case 'y':
-				newOD.$d.setUTCFullYear(this.year + quantity)
+		case 'd':
+			newOD.$d.setUTCDate(this.date + quantity)
+			break
+		case 'w':
+			newOD.$d.setUTCDate(this.date + quantity * 7)
+			break
+		case 'm':
+			// the following ensures add/subtracting months of differing lengths
+			// works as expected.
+			newOD.$d.setUTCDate(1)
+			newOD.$d.setUTCMonth(this.month + quantity)
+			newOD.$d.setUTCDate(Math.min(this.date, newOD.daysInMonth()))
+			break
+		case 'y':
+			newOD.$d.setUTCFullYear(this.year + quantity)
 		}
 		return newOD.clone()
 	}
 
-	subtract(quantity, unit) {
+	subtract (quantity, unit) {
 		return this.add(quantity * -1, unit)
 	}
 
-	startOf(unit) {
+	startOf (unit) {
 		const newOD = new Dateo(this.toString())
 		switch (unit) {
-			case 'w':
-				newOD.$d.setUTCDate(this.date - this.day)
-				break
-			case 'm':
-				newOD.$d.setUTCDate(1)
-				break
-			case 'y':
-				newOD.$d.setUTCMonth(0)
-				newOD.$d.setUTCDate(1)
+		case 'w':
+			newOD.$d.setUTCDate(this.date - this.day)
+			break
+		case 'm':
+			newOD.$d.setUTCDate(1)
+			break
+		case 'y':
+			newOD.$d.setUTCMonth(0)
+			newOD.$d.setUTCDate(1)
 		}
 		return newOD.clone()
 	}
 
-	endOf(unit) {
+	endOf (unit) {
 		const newOD = this.clone()
 		switch (unit) {
-			case 'w':
-				newOD.$d.setUTCDate(newOD.date - newOD.day + 6)
-				break
-			case 'm':
-				// set to first day of month
-				newOD.$d.setUTCDate(1)
-				// go to next month
-				newOD.$d.setUTCMonth(newOD.month + 1)
-				// then step back a day. date is 1-31, so 0 is back one day
-				newOD.$d.setUTCDate(0)
-				break;
-			case 'y':
-				newOD.$d.setUTCMonth(11)
-				newOD.$d.setUTCDate(31)
+		case 'w':
+			newOD.$d.setUTCDate(newOD.date - newOD.day + 6)
+			break
+		case 'm':
+			// set to first day of month
+			newOD.$d.setUTCDate(1)
+			// go to next month
+			newOD.$d.setUTCMonth(newOD.month + 1)
+			// then step back a day. date is 1-31, so 0 is back one day
+			newOD.$d.setUTCDate(0)
+			break;
+		case 'y':
+			newOD.$d.setUTCMonth(11)
+			newOD.$d.setUTCDate(31)
 		}
 		return newOD.clone()
 	}
 
-	daysInMonth() {
+	daysInMonth () {
 		const newDO = this.endOf('m')
 		return newDO.date
 	}
 
 	// Format
-	format(formatStr) {
+	format (formatStr) {
 		if (!formatStr) return this.toString()
 		const getShort = (index, full, length) => full[index].substr(0, length)
 		return formatStr.replace(REGEX_FORMAT, (match) => {
 			if (match.indexOf('[') > -1) return match.replace(/\[|\]/g, '')
 			switch (match) {
-				case 'YY':
+			case 'YY':
 				return String(this.year).slice(-2)
-				case 'YYYY':
+			case 'YYYY':
 				return String(this.year)
-				case 'M':
+			case 'M':
 				return String(this.month + 1)
-				case 'MM':
+			case 'MM':
 				return padStart(this.month + 1, 2, '0')
-				case 'MMM':
+			case 'MMM':
 				return getShort(this.month, months, 3)
-				case 'MMMM':
+			case 'MMMM':
 				return months[this.month]
-				case 'D':
+			case 'D':
 				return String(this.date)
-				case 'DD':
+			case 'DD':
 				return padStart(this.date, 2, '0')
-				case 'd':
+			case 'd':
 				return String(this.day)
-				case 'dd':
+			case 'dd':
 				return getShort(this.day, weekdays, 2)
-				case 'ddd':
+			case 'ddd':
 				return getShort(this.day, weekdays, 3)
-				case 'dddd':
+			case 'dddd':
 				return weekdays[this.day]
 			}
 		})
 	}
 
-	isBefore(dateo) {
-		if (!dateo || !(dateo instanceof Dateo)) throw 'isBefore must take another Dateo as an argument'
+	isBefore (dateo) {
+		if (!dateo || !(dateo instanceof Dateo)) throw new Error('isBefore must take another Dateo as an argument')
 		return this.toString() < dateo.toString()
 	}
 
-	isAfter(dateo) {
-		if (!dateo || !(dateo instanceof Dateo)) throw 'isAfter must take another Dateo as an argument'
+	isAfter (dateo) {
+		if (!dateo || !(dateo instanceof Dateo)) throw new Error('isAfter must take another Dateo as an argument')
 		return this.toString() > dateo.toString()
 	}
 
-	isSame(dateo) {
-		if (!dateo || !(dateo instanceof Dateo)) throw 'isSame must take another Dateo as an argument'
+	isSame (dateo) {
+		if (!dateo || !(dateo instanceof Dateo)) throw new Error('isSame must take another Dateo as an argument')
 		return this.toString() === dateo.toString()
 	}
 
 	// Always return ISO string
-	toString() {
+	toString () {
 		return this.$d.toISOString().substr(0, 10)
 	}
 }
