@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - "9"
+
+matrix:
+  include:
+  - node_js: "10"
+    before_install:
+      - export TZ=GMT
+      - date
+  - node_js: "10"
+    before_install:
+      - export TZ=US/Central
+      - date
+  - node_js: "10"
+    before_install:
+      - export TZ=Asia/Shanghai
+      - date
+  - node_js: "10"
+    before_install:
+      - export TZ=America/New_York
+      - date
+
+script:
+  - npm run test-coveralls
+
+

@@ -1,0 +1,37 @@
+{
+  "name": "dateo.js",
+  "version": "0.1.0",
+  "description": "A date library that only cares about dates.",
+  "main": "dist/dateo.min.js",
+  "scripts": {
+    "test-html": "nyc --reporter=html mocha",
+    "test": "nyc mocha --require @babel/register",
+    "test-coveralls": "nyc --reporter=text-lcov mocha --require @babel/register | coveralls",
+    "build": "webpack --mode production",
+    "size": "size-limit"
+  },
+  "size-limit": [
+    {
+      "path": "dist/dateo.min.js",
+      "limit": "2 KB"
+    }
+  ],
+  "author": "= <jon@jonwohl.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "coveralls": "^3.0.3",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "size-limit": "^0.21.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "babel-core": "6.x || ^7.0.0-bridge.0"
+  }
+}
